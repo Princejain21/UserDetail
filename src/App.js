@@ -14,7 +14,7 @@ export default function App() {
       <Router>
         <Navbar />
         <Switch>
-          <Route exact path="/">
+          <Route exact path="/UserDetail">
           <Form />
           </Route>
         </Switch>
