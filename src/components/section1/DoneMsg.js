@@ -8,8 +8,8 @@ export default function DoneMsg() {
     history.push('/UserDetail')
   }
   return (
-    <div id='message'>
-                <img src={img} className='img-responsive' alt="..."/>
+    <div id='message' className='text-center'>
+        <img src={img} className='img-responsive' alt="..."/>
         <h2 className='font-weight-bold'>Thank you for providing the feedback</h2>
         <h4>We will work towards improving your experience</h4>
         <br/>
