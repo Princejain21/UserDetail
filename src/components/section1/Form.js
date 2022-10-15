@@ -4,6 +4,7 @@ import Radio from './Radio';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import Alert from '../../Asset/alert.png'
+import { useHistory } from 'react-router-dom';
 
 
 export default function Form() {
@@ -16,6 +17,7 @@ export default function Form() {
     const [condition5, setCondition5] = useState(false);
     const [condition6, setCondition6] = useState(false);
     const [condition7, setCondition7] = useState(false);
+    const history=useHistory();
     const initialData = {
         Name: "",
         Email: "",
@@ -55,7 +57,8 @@ export default function Form() {
             const converData=JSON.stringify(fdata)
             console.log(fdata, 'fdata hai yh',converData,'bdala')
             localStorage.setItem('FormData',converData )
-            window.location.href = '/confirm';
+            // window.location.href = '/confirm';
+            history.push('/confirm')
         }
     }, [error])
     const validate = (value) => {

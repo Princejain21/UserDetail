@@ -1,8 +1,12 @@
 import React from 'react'
 import img from '../../Asset/confirmTick.png'
-import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import '../CSS/confirm.css'
 export default function DoneMsg() {
+  const history=useHistory();
+  const handleclick=()=>{
+    history.push('/UserDetail')
+  }
   return (
     <div id='message'>
                 <img src={img} className='img-responsive' alt="..."/>
@@ -11,7 +15,7 @@ export default function DoneMsg() {
         <br/>
         <br/>
 
-        <button className='text-center text-white btn px-5 py-2' style={{backgroundColor:"purple"}}><Link to='/UserDetail' className='text-white'>Close</Link></button>
+        <button className='text-center text-white btn px-5 py-2' style={{backgroundColor:"purple"}} onClick={handleclick}>Close</button>
 
     </div>
   )
