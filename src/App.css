@@ -6,3 +6,32 @@
 .required:after { content:"*";
     color: red; 
     }
+
+#refresh:hover{
+    cursor: pointer!important;
+}
+.rdt_TableHeadRow{
+    background-color: rgb(247, 224, 255)!important;
+}
+.rdt_TableCol_Sortable{
+    text-align: center!important;
+}
+
+.nav-link{
+    font-size: medium!important;
+    margin-left: 4px;
+}
+.nav-link:hover{
+    color: red !important;
+}
+.navbar-brand{
+    font-size: large!important;
+}
+
+.nav-link:focus{
+    color: yellow !important;
+}
+/* delete all data */
+#delteBtn{
+    background-color: rgb(252, 80, 200);
+}

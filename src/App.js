@@ -6,8 +6,8 @@ import {
   Switch,
   Route
 } from 'react-router-dom'
-import Result from './components/section2/Result'
 import DoneMsg from './components/section1/DoneMsg'
+import Result from './components/section3/Result'
 
 export default function App() {
   return (
@@ -18,11 +18,11 @@ export default function App() {
           <Route exact path="/UserDetail">
             <Form />
           </Route>
-          <Route exact path='/table'>
-            <Result />
-          </Route>
             <Route exact path='/confirm'>
             <DoneMsg />
+          </Route>
+            <Route exact path='/result'>
+            <Result />
           </Route>
         </Switch>
 

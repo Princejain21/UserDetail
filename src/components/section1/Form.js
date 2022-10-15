@@ -3,13 +3,12 @@ import '../../App.css'
 import Radio from './Radio';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
-import Alert from '../../Asset/alert.png'
 import { useHistory } from 'react-router-dom';
+import Alertmsg from './Alertmsg';
 
 
 export default function Form() {
     const [phone, setphone] = useState();
-    const [color, setcolor] = useState(false);
     const [condition, setCondition] = useState(false);
     const [condition2, setCondition2] = useState(false);
     const [condition3, setCondition3] = useState(false);
@@ -17,7 +16,7 @@ export default function Form() {
     const [condition5, setCondition5] = useState(false);
     const [condition6, setCondition6] = useState(false);
     const [condition7, setCondition7] = useState(false);
-    const history=useHistory();
+    const history = useHistory();
     const initialData = {
         Name: "",
         Email: "",
@@ -28,19 +27,19 @@ export default function Form() {
         que4: "",
 
     }
-   
+
     const getdata = () => {
         const gda = localStorage.getItem('FormData');
         const cdata = JSON.parse(gda);
         if (cdata) {
             return cdata;
-        }else{
+        } else {
             return [];
         }
     }
     const [data, setData] = useState(initialData);
     const [error, seterror] = useState({ Number: "", Email: "", name: '', nameerror: '', emailerror: '', numerror: "", que1: "", que2: "", que3: "", que4: "" });
-    const [fdata, setfdata] = useState(getdata());
+    const fdata = getdata();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData({ ...data, [name]: value });
@@ -54,10 +53,8 @@ export default function Form() {
     useEffect(() => {
         if (Object.keys(error).length === 2 && error.nameerror === 'is-valid' && error.emailerror === 'is-valid') {
             fdata.push(data);
-            const converData=JSON.stringify(fdata)
-            console.log(fdata, 'fdata hai yh',converData,'bdala')
-            localStorage.setItem('FormData',converData )
-            // window.location.href = '/confirm';
+            const converData = JSON.stringify(fdata)
+            localStorage.setItem('FormData', converData)
             history.push('/confirm')
         }
     }, [error])
@@ -72,10 +69,22 @@ export default function Form() {
             setCondition7(true)
             error.Email = 'oops! it\'s invalid format email'
             error.emailerror = 'is-invalid';
-        } else {
-            setCondition7(false)
+        }
+        else {
+            const finalData = fdata.filter((elem) => {
+                return elem.Email.toLowerCase() === value.Email.toLowerCase();
+            })
+            if (finalData.length === 0) {
+                setCondition7(false)
+                error.emailerror = 'is-valid'
+            } else {
+                setCondition7(true)
+                error.Email = 'Email already Exist in Old Data'
+                error.emailerror = 'is-invalid';
 
-            error.emailerror = 'is-valid'
+            }
+
+
         }
 
         if (!value.Name) {
@@ -112,18 +121,14 @@ export default function Form() {
             setCondition4(false)
         }
         if (value.Number === undefined) {
-            setcolor(true);
             setCondition6(true)
 
             error.Number = 'Number is Mandetory'
         } else if (value.Number && value.Number.length < 10) {
-            setcolor(true);
             setCondition6(true)
             error.Number = 'Number should be greather than and equal to 10 digits'
-            console.log(value.Number.length)
         } else {
             setCondition6(false)
-            setcolor(false)
         }
         return error;
 
@@ -131,11 +136,11 @@ export default function Form() {
 
     return (
         <>
-            <div className='px-5 py-2' style={{ backgroundColor: '#ededed' }}>
+            <div className=' mx-4 px-2 p-1  ' style={{ backgroundColor: '#ededed' }}>
                 <h2>Aromatic Bar</h2>
             </div>
-            <div className='  p-5 '>
-                <form onSubmit={handlesubmitform}>
+            <div className='  p-4 '>
+                <form onSubmit={handlesubmitform} className="p-4" style={{ backgroundColor: '#ededed' }}>
                     <div className='row'>
                         <div className='col-md-6'>
                             <div className='form-group'>
@@ -144,15 +149,11 @@ export default function Form() {
                                     onChange={handleChange}
                                     name='Name'
                                     type='text'
-                                    className={`w-75 form-control ${error.nameerror}`}
+                                    className={`w-75 form-control  ${error.nameerror}`}
                                     placeholder='enter your name here'
-                                    // ref={register}
                                     id='iput' />
                                 {
-                                    condition5 &&
-                                    <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
-                                        <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.name}</p>
-                                    </div>
+                                    condition5 && <Alertmsg message={error.name} />
                                 }
                             </div>
                             <div className="form-group ">
@@ -166,14 +167,9 @@ export default function Form() {
                                     onChange={setphone}
                                 />
                                 {
-                                    condition6 &&
-                                    <div className={`row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column`} style={{ backgroundColor: "#fde9e9" }} >
-                                        <p className={`text-danger ml-1  `}><img height='20px'  src={Alert} alt="..." />{error.Number}</p>
-                                    </div>
+                                    condition6 && <Alertmsg message={error.Number} />
                                 }
                             </div>
-                            {console.log(condition)}
-
                             <Radio
                                 change={handleChange}
                                 question='Please rate the quality of the service you received from your host.? '
@@ -186,10 +182,7 @@ export default function Form() {
                                 condition={condition}
                             />
                             {
-                                condition &&
-                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
-                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que1}</p>
-                                </div>
+                                condition && <Alertmsg message={error.que1} />
                             }
                             <br />
                             <br />
@@ -204,10 +197,7 @@ export default function Form() {
                                 errorMsg={error.que2}
                             />
                             {
-                                condition2 &&
-                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
-                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que2}</p>
-                                </div>
+                                condition2 && <Alertmsg message={error.que2} />
                             }
 
 
@@ -226,15 +216,12 @@ export default function Form() {
                                     id='input12'
                                 />
                                 {
-                                condition7 &&
-                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
-                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.Email}</p>
-                                </div>
-                            }
+                                    condition7 && <Alertmsg message={error.Email} />
+                                }
                             </div>
-                            <br/>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
+                            <br />
 
                             <Radio
                                 change={handleChange}
@@ -248,9 +235,7 @@ export default function Form() {
                             />
                             {
                                 condition3 &&
-                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
-                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que3}</p>
-                                </div>
+                                <Alertmsg message={error.que3} />
                             }
                             <br />
                             <br />
@@ -266,16 +251,15 @@ export default function Form() {
                             />
                             {
                                 condition4 &&
-                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
-                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que4}</p>
-                                </div>
+                                <Alertmsg message={error.que4} />
                             }
                             <br />
                             <br />
                             <br />
-
-                            <button type='submit' className='btn btn-primary'>submit</button>
                         </div>
+                    </div>
+                    <div className='row d-flex mr-2 justify-content-end '>
+                        <button type='submit' className='btn btn-success text-white'>Submit review</button>
                     </div>
                 </form>
             </div>

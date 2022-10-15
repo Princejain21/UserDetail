@@ -1,5 +1,4 @@
 import React from 'react'
-import Alert from '../../Asset/alert.png'
 import '../../App.css'
 
 export default function Radio(props) {
