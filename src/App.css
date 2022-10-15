@@ -3,7 +3,6 @@
     color: white;
 }
 
-body{
-    /* background: url('../src/components/section1/iitImage.jpg') no-repeat center center/cover; */
-    background-color: red;
-}
+.required:after { content:"*";
+    color: red; 
+    }

@@ -5,7 +5,7 @@ import '../App.css'
 export default function Navbar() {
   return (
     <>
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar mb-0 navbar-expand-lg navbar-dark bg-dark">
   <p className="navbar-brand" >Navbar</p>
   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span className="navbar-toggler-icon"></span>

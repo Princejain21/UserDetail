@@ -1,241 +1,282 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../../App.css'
-export default function Form(){
-    const initialData={
-        Name:"",
-        Email:"", 
-        Number:"",
-        Message:"",
-        que1:"",
-        que2:"",
-        que3:"",
-        que4:"",
-       
+import Radio from './Radio';
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+import Alert from '../../Asset/alert.png'
+
+
+export default function Form() {
+    const [phone, setphone] = useState();
+    const [color, setcolor] = useState(false);
+    const [condition, setCondition] = useState(false);
+    const [condition2, setCondition2] = useState(false);
+    const [condition3, setCondition3] = useState(false);
+    const [condition4, setCondition4] = useState(false);
+    const [condition5, setCondition5] = useState(false);
+    const [condition6, setCondition6] = useState(false);
+    const [condition7, setCondition7] = useState(false);
+    const initialData = {
+        Name: "",
+        Email: "",
+        Number: "",
+        que1: "",
+        que2: "",
+        que3: "",
+        que4: "",
+
     }
-    const getdata=()=>{
-        const gda=localStorage.getItem('FormData');
-        const cdata=JSON.parse(gda);
-        if(cdata){
+   
+    const getdata = () => {
+        const gda = localStorage.getItem('FormData');
+        const cdata = JSON.parse(gda);
+        if (cdata) {
             return cdata;
         }else{
             return [];
         }
     }
     const [data, setData] = useState(initialData);
-    const [error,seterror]=useState({Number:"",Email:"",name:'',nameerror:'',emailerror:'',numerror:""});
-    const [fdata,setfdata]=useState(getdata());
-       const handleChange=(e)=>{    
-       const {name,value}=e.target;
-       setData({...data,[name]:value});
-   }
-   const handlesubmitform=(e)=>{
-       e.preventDefault();
-       seterror(validate(data))
-     
-   }   
-   useEffect(()=>{
+    const [error, seterror] = useState({ Number: "", Email: "", name: '', nameerror: '', emailerror: '', numerror: "", que1: "", que2: "", que3: "", que4: "" });
+    const [fdata, setfdata] = useState(getdata());
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData({ ...data, [name]: value });
+    }
+    const handlesubmitform = (e) => {
+        e.preventDefault();
+        data.Number = phone;
+        seterror(validate(data))
 
-  if(error.numerror==='is-valid'&&error.nameerror==='is-valid'&&error.emailerror==='is-valid'){
-      setfdata([...fdata,data]);
-      if(fdata.length>=1){localStorage.setItem('FormData',JSON.stringify(fdata))};
-        alert('thanks for submitting the data')
     }
-   },[error])
-const validate=(value)=>{
-    const error={};
-    const RegexEmail=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
-    if(value.Number.length===0){
-        error.Number='Number is mandatory'
-        error.numerror='is-invalid'
-    }else if(value.Number.length>10||value.Number.length<10 || !value.Number.length===0){
-        error.Number='Number must be 10 digit only'
-        error.numerror='is-invalid'
-    } 
-    else{
-        error.numerror='is-valid'
-    }
-    if(!value.Email){
-    error.Email="email is mandatory";
-    error.emailerror='is-invalid';    
-}else if(!RegexEmail.test(value.Email)){
-    error.Email='oops! it\'s invalid format email'
-    error.emailerror='is-invalid';
-    }else{
-        error.emailerror='is-valid'
-    }
+    useEffect(() => {
+        if (Object.keys(error).length === 2 && error.nameerror === 'is-valid' && error.emailerror === 'is-valid') {
+            fdata.push(data);
+            const converData=JSON.stringify(fdata)
+            console.log(fdata, 'fdata hai yh',converData,'bdala')
+            localStorage.setItem('FormData',converData )
+            window.location.href = '/confirm';
+        }
+    }, [error])
+    const validate = (value) => {
+        const error = {};
+        const RegexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
+        if (!value.Email) {
+            setCondition7(true)
+            error.Email = "please enter the value for the above field";
+            error.emailerror = 'is-invalid';
+        } else if (!RegexEmail.test(value.Email)) {
+            setCondition7(true)
+            error.Email = 'oops! it\'s invalid format email'
+            error.emailerror = 'is-invalid';
+        } else {
+            setCondition7(false)
 
-    if(!value.Name){
-        error.name='Name is mandatory to fill.'
-        error.nameerror='is-invalid'
-    }else{
-        error.nameerror='is-valid'   
-    }
-return error;
+            error.emailerror = 'is-valid'
+        }
 
-}
+        if (!value.Name) {
+            setCondition5(true)
+            error.name = 'Name is mandatory to fill.'
+            error.nameerror = 'is-invalid'
+        } else {
+            setCondition5(false)
+            error.nameerror = 'is-valid'
+        }
+        if (value.que1 === '') {
+            setCondition(true)
+            error.que1 = 'Rating is mandetory'
+        } else {
+            setCondition(false)
+        }
+        if (value.que2 === '') {
+            setCondition2(true)
+
+            error.que2 = 'Rating is mandetory'
+        } else {
+            setCondition2(false)
+        }
+        if (value.que3 === '') {
+            setCondition3(true)
+            error.que3 = 'Rating is mandetory'
+        } else {
+            setCondition3(false)
+        }
+        if (value.que4 === '') {
+            setCondition4(true)
+            error.que4 = 'Rating is mandetory'
+        } else {
+            setCondition4(false)
+        }
+        if (value.Number === undefined) {
+            setcolor(true);
+            setCondition6(true)
+
+            error.Number = 'Number is Mandetory'
+        } else if (value.Number && value.Number.length < 10) {
+            setcolor(true);
+            setCondition6(true)
+            error.Number = 'Number should be greather than and equal to 10 digits'
+            console.log(value.Number.length)
+        } else {
+            setCondition6(false)
+            setcolor(false)
+        }
+        return error;
+
+    }
 
     return (
-        <div className='container bg-secondary mt-5 '>
-            <h4 className='text-primary'>Aromatic Bar</h4>
-            <small> We are committed to providing you with the best
-                dining experience possible, so we welcome your comments. Please fill out this questionnaire. Thank you.
-            </small>
-            <form onSubmit={handlesubmitform}>
-                <div className='row'>
-                    <div className='col-md-6'>
-                        <div className='form-group'>
-                            <label htmlFor='input1' id='area' placeholder='Text field'><b>Feedback</b></label><br />
-                            <textarea 
-                            rows='5'
-                            onChange={handleChange}
-                            name='Message' 
-                            className='form-control prince'
-                            cols='40'
-                            value={data.Message}
-                            id='area' />
-                        </div>
-                        <div className='form-group'>
-                            <label htmlFor='iput'  >Name</label><br />
-                            <input
-                            onChange={handleChange} 
-                            name='Name' 
-                            type='text'
-                            className={`form-control ${error.nameerror}`}
-                            placeholder='enter your name here'
-                            // ref={register}
-                            id='iput' />
-                            <small>{error.name}</small>
-                        </div>
-                        <div className='form-group'>
-                            <label htmlFor='input' >Phone</label><br />
-                            <div className='input-group'>
-                                <div className='input-group-prepand'>
-                                    <span><img style={{ height: '40px' }} src="https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-india-flag-countrys-flags-justicon-flat-justicon.png" alt='...' /></span>
-                                </div>
+        <>
+            <div className='px-5 py-2' style={{ backgroundColor: '#ededed' }}>
+                <h2>Aromatic Bar</h2>
+            </div>
+            <div className='  p-5 '>
+                <form onSubmit={handlesubmitform}>
+                    <div className='row'>
+                        <div className='col-md-6'>
+                            <div className='form-group'>
+                                <label htmlFor='iput' className='required' >Name</label><br />
                                 <input
-                                onChange={handleChange} 
-                                name='Number'
-                                type='Number' 
-                                className={`form-control ${error.numerror}`}
-                                placeholder='enter your mobile number' 
-                                id='input' ></input>
+                                    onChange={handleChange}
+                                    name='Name'
+                                    type='text'
+                                    className={`w-75 form-control ${error.nameerror}`}
+                                    placeholder='enter your name here'
+                                    // ref={register}
+                                    id='iput' />
+                                {
+                                    condition5 &&
+                                    <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
+                                        <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.name}</p>
+                                    </div>
+                                }
                             </div>
-                            <small className='container'>{error.Number}</small>
+                            <div className="form-group ">
+                                <label htmlFor="phone" className='required'>Phone</label>
+                                <PhoneInput
+                                    className=" w-75 border-primary"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="99999999"
+                                    value={phone}
+                                    onChange={setphone}
+                                />
+                                {
+                                    condition6 &&
+                                    <div className={`row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column`} style={{ backgroundColor: "#fde9e9" }} >
+                                        <p className={`text-danger ml-1  `}><img height='20px'  src={Alert} alt="..." />{error.Number}</p>
+                                    </div>
+                                }
+                            </div>
+                            {console.log(condition)}
 
-                        </div>
-
-
-
-                    </div>
-                    <div className='col-md-6'>
-                        <div className='form-group'>
-                            <label htmlFor='input12' >Email:-</label><br />
-                            <input 
-                            onChange={handleChange} 
-                            type='text' 
-                            name='Email' 
-                            className={`form-control ${error.emailerror}`}
-                            placeholder='enter your Email here' 
-                            id='input12'
-                            // ref={register} 
+                            <Radio
+                                change={handleChange}
+                                question='Please rate the quality of the service you received from your host.? '
+                                id1='rad-11'
+                                id2='rad-12'
+                                id3='rad-13'
+                                id4='rad-14'
+                                name='que1'
+                                errorMsg={error.que1}
+                                condition={condition}
                             />
-                            <small className='container'>{error.Email}</small>
+                            {
+                                condition &&
+                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
+                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que1}</p>
+                                </div>
+                            }
+                            <br />
+                            <br />
+                            <Radio
+                                change={handleChange}
+                                question='Was our restaurant clean? '
+                                id1='rad-21'
+                                id2='rad-22'
+                                id3='rad-23'
+                                id4='rad-24'
+                                name='que2'
+                                errorMsg={error.que2}
+                            />
+                            {
+                                condition2 &&
+                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
+                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que2}</p>
+                                </div>
+                            }
+
+
+
+
                         </div>
-                        <ol>
-                            <li>Please rate the quality of the service you received from your host.? </li>
-                            <div className='row'>
-                                <div className='col py-2'>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='Excellent' type='radio' name='que1' className='form-check-input' id='check1' />
-                                        <label htmlFor='check1' className='form-check-label'>Excellent</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} type='radio' value='good' name='que1' className='form-check-input' id='check2' />
-                                        <label htmlFor='check2' className='form-check-label' >good</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} type='radio' value='fair' name='que1' className='form-check-input' id='check3' />
-                                        <label htmlFor='check3' className='form-check-label'>fair</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} type='radio' value='bad' name='que1' className='form-check-input' id='check4' />
-                                        <label htmlFor='check4' className='form-check-label' >bad</label>
-                                    </div>
-
+                        <div className='col-md-6'>
+                            <div className='form-group'>
+                                <label htmlFor='input12' className='required' >Email</label><br />
+                                <input
+                                    onChange={handleChange}
+                                    type='text'
+                                    name='Email'
+                                    className={`w-75 form-control mb-0  ${error.emailerror}`}
+                                    placeholder='enter your Email here'
+                                    id='input12'
+                                />
+                                {
+                                condition7 &&
+                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
+                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.Email}</p>
                                 </div>
+                            }
                             </div>
+                            <br/>
+                            <br/>
+                            <br/>
 
-                            <li> Please rate the quality of your beverage.? </li>
-                            <div className='row'>
-                                <div className='col py-2'>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='Excellent' type='radio' name='que2' className='form-check-input' id='check11' />
-                                        <label htmlFor='check11' className='form-check-label'>Excellent</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='good' type='radio' name='que2' className='form-check-input' id='check12' />
-                                        <label htmlFor='check12' className='form-check-label' >good</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='fair' type='radio' name='que2' className='form-check-input' id='check13' />
-                                        <label htmlFor='check13' className='form-check-label'>fair</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} type='radio' value='bad' name='que2' className='form-check-input' id='check14' />
-                                        <label htmlFor='check14' className='form-check-label' >bad</label>
-                                    </div>
-
+                            <Radio
+                                change={handleChange}
+                                question=' Please rate the quality of your beverage.? '
+                                id1='rad-31'
+                                id2='rad-32'
+                                id3='rad-33'
+                                id4='rad-34'
+                                name='que3'
+                                errorMsg={error.que3}
+                            />
+                            {
+                                condition3 &&
+                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
+                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que3}</p>
                                 </div>
-                            </div>
-
-                            <li>Was our restaurant clean? </li>
-                            <div className='row'>
-                                <div className='col py-2'>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} type='radio' name='que3' className='form-check-input' value='Excellent' id='check21' />
-                                        <label htmlFor='check21' className='form-check-label' id='check1'>Excellent</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} type='radio' name='que3' className='form-check-input' value='good' id='check22' />
-                                        <label htmlFor='check22' className='form-check-label' >good</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='fair' type='radio' name='que3' className='form-check-input' id='check23' />
-                                        <label htmlFor='check23' className='form-check-label'>fair</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='bad' type='radio' name='que3' className='form-check-input' id='check24' />
-                                        <label htmlFor='check24' className='form-check-label' >bad</label>
-                                    </div>
+                            }
+                            <br />
+                            <br />
+                            <Radio
+                                change={handleChange}
+                                question=' Please rate your overall dining experience.? '
+                                id1='rad-41'
+                                id2='rad-42'
+                                id3='rad-43'
+                                id4='rad-44'
+                                name='que4'
+                                errorMsg={error.que4}
+                            />
+                            {
+                                condition4 &&
+                                <div className='row text-danger border border-danger ml-1 mt-4 w-75 d-flex align-self-center flex-column' style={{ backgroundColor: "#fde9e9" }} >
+                                    <p className={`text-danger ml-1  `}><img height='20px' className='' src={Alert} alt="..." />{error.que4}</p>
                                 </div>
-                            </div>
-                            <li>. Please rate your overall dining experience.?</li>
-                            <div className='row'>
-                                <div className='col py-2'>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='Excellent' type='radio' name='que4' className='form-check-input' id='check51' />
-                                        <label htmlFor='check51' className='form-check-label' id='check1'>Excellent</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='good' type='radio' name='que4' className='form-check-input' id='check52' />
-                                        <label htmlFor='check52' className='form-check-label' >good</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='fair' type='radio' name='que4' className='form-check-input' id='check53' />
-                                        <label htmlFor='check53' className='form-check-label'>fair</label>
-                                    </div>
-                                    <div className='form-check form-check-inline'>
-                                        <input onChange={handleChange} value='bad' type='radio' name='que4' className='form-check-input' id='check54' />
-                                        <label htmlFor='check54' className='form-check-label' >bad</label>
-                                    </div>
+                            }
+                            <br />
+                            <br />
+                            <br />
 
-                                </div>
-                            </div>
-                        </ol>
-                        <button type='submit' className='btn btn-primary'>submit</button>
+                            <button type='submit' className='btn btn-primary'>submit</button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        </>
+
     )
 }

@@ -7,6 +7,7 @@ import {
   Route
 } from 'react-router-dom'
 import Result from './components/section2/Result'
+import DoneMsg from './components/section1/DoneMsg'
 
 export default function App() {
   return (
@@ -15,12 +16,16 @@ export default function App() {
         <Navbar />
         <Switch>
           <Route exact path="/UserDetail">
-          <Form />
+            <Form />
+          </Route>
+          <Route exact path='/table'>
+            <Result />
+          </Route>
+            <Route exact path='/confirm'>
+            <DoneMsg />
           </Route>
         </Switch>
-        <Route exact path='/table'>
-          <Result/>
-        </Route>
+
       </Router>
     </div>
   )
